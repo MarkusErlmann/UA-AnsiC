@@ -779,14 +779,17 @@ OpcUa_StatusCode OpcUa_DateTime_BinaryEncode(
     OpcUa_DateTime*     a_pValue,
     OpcUa_OutputStream* a_pOstrm)
 {
+#if OPCUA_P_NATIVE64
     OpcUa_UInt64 nBuffer;
     OpcUa_Int64 nValue;
+#endif /* OPCUA_P_NATIVE64 */
 
     OpcUa_InitializeStatus(OpcUa_Module_Serializer, "OpcUa_DateTime_BinaryEncode");
 
     OpcUa_ReturnErrorIfArgumentNull(a_pValue);
     OpcUa_ReturnErrorIfArgumentNull(a_pOstrm);
 
+#if OPCUA_P_NATIVE64
     /* convert structure to Int64 */
     nBuffer = (OpcUa_UInt32)a_pValue->dwHighDateTime;
 
@@ -799,6 +802,13 @@ OpcUa_StatusCode OpcUa_DateTime_BinaryEncode(
     /* write value */
     uStatus = OpcUa_Int64_BinaryEncode(nValue, a_pOstrm);
     OpcUa_GotoErrorIfBad(uStatus);
+#else /* OPCUA_P_NATIVE64 */
+    /* write value */
+    uStatus = OpcUa_UInt32_BinaryEncode(a_pValue->dwLowDateTime, a_pOstrm);
+    OpcUa_GotoErrorIfBad(uStatus);
+    uStatus = OpcUa_UInt32_BinaryEncode(a_pValue->dwHighDateTime, a_pOstrm);
+    OpcUa_GotoErrorIfBad(uStatus);
+#endif /* OPCUA_P_NATIVE64 */
 
     OpcUa_ReturnStatusCode;
     OpcUa_BeginErrorHandling;

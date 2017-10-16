@@ -151,17 +151,29 @@ OpcUa_BuiltInType;
  * The Int64 type
  *===========================================================================*/
 
+#if OPCUA_P_NATIVE64
 #define OpcUa_Int64_Initialize(xValue) do { *(xValue) = (OpcUa_Int64)0; } while(0)
 
 #define OpcUa_Int64_Clear(xValue) do { *(xValue) = (OpcUa_Int64)0; } while(0)
+#else /* OPCUA_P_NATIVE64 */
+#  define OpcUa_Int64_Initialize(xValue) do { ((OpcUa_Int64*)xValue)->dwLowQuad = 0; ((OpcUa_Int64*)xValue)->dwHighQuad = 0;} while(0)
+
+#  define OpcUa_Int64_Clear OpcUa_Int64_Initialize
+#endif /* OPCUA_P_NATIVE64 */
 
 /*============================================================================
  * The UInt64 type
  *===========================================================================*/
 
+#if OPCUA_P_NATIVE64
 #define OpcUa_UInt64_Initialize(xValue) do { *(xValue) = (OpcUa_UInt64)0; } while(0)
 
 #define OpcUa_UInt64_Clear(xValue) do { *(xValue) = (OpcUa_UInt64)0; } while(0)
+#else /* OPCUA_P_NATIVE64 */
+#  define OpcUa_UInt64_Initialize OpcUa_Int64_Initialize 
+
+#  define OpcUa_UInt64_Clear OpcUa_Int64_Clear
+#endif /* OPCUA_P_NATIVE64 */
 
 /*============================================================================
  * The Float type
