@@ -1171,10 +1171,14 @@ OPCUA_EXPORT OpcUa_StatusCode OpcUa_Channel_GetUsedServerCertificate(
     OpcUa_ByteString** a_ppUsedServerCertificate,
     OpcUa_StatusCode*  a_pValidationResult)
 {
+#ifdef OPCUA_HAVE_HTTPS
     OpcUa_InternalChannel*  pChannel = (OpcUa_InternalChannel*)(a_hChannel);
-
+#endif /* OPCUA_HAVE_HTTPS */
 OpcUa_InitializeStatus(OpcUa_Module_Channel, "GetUsedServerCertificate");
-
+#ifndef OPCUA_HAVE_HTTPS
+    OpcUa_ReferenceParameter(a_ppUsedServerCertificate);
+    OpcUa_ReferenceParameter(a_pValidationResult);
+#endif /* OPCUA_HAVE_HTTPS */
     OpcUa_GotoErrorIfArgumentNull(a_hChannel);
 
 #ifdef OPCUA_HAVE_HTTPS
