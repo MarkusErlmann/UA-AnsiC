@@ -62,7 +62,7 @@ OpcUa_StatusCode OpcUa_StringTable_EnsureCapacity(
     {
         OpcUa_UInt32 nLength = a_pTable->Count + a_nCapacity;
 
-        OpcUa_String* pTmp = OpcUa_ReAlloc(a_pTable->Values, nLength*sizeof(OpcUa_String));
+        OpcUa_String* pTmp = (OpcUa_String*) OpcUa_ReAlloc(a_pTable->Values, nLength*sizeof(OpcUa_String));
         OpcUa_ReturnErrorIfAllocFailed(pTmp);
 
         a_pTable->Values = pTmp;

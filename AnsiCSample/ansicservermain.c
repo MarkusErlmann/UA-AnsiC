@@ -105,11 +105,7 @@ OpcUa_StatusCode OPCUA_DLLCALL Timer_Callback(  OpcUa_Void*             pvCallba
 //CONTINUATION POINT--------------------------------
  OpcUa_Int			Continuation_Point_Identifier;
  OpcUa_Int			Cont_Point_Counter;
- enum
- {
-	free_to_use=0,
-	occupied=1
-}continuation_point;
+ continuation_point Cont_Point_State;
 
  OpcUa_UInt32		max_ref_per_node;
 //--------------------------------------------------
@@ -516,7 +512,7 @@ OpcUa_StatusCode my_FindServers(
 		OpcUa_GotoError
 	}
 	
-	*a_pServers=OpcUa_Memory_Alloc(sizeof(OpcUa_ApplicationDescription));
+    *a_pServers=(OpcUa_ApplicationDescription*) OpcUa_Memory_Alloc(sizeof(OpcUa_ApplicationDescription));
 	OpcUa_GotoErrorIfAllocFailed(*a_pServers)
 
     uStatus=fill_server_variable(*a_pServers);
@@ -1116,7 +1112,7 @@ OpcUa_StatusCode speichere_username(const OpcUa_ExtensionObject* p_UserIdentityT
 {
 	OpcUa_StatusCode        uStatus     = OpcUa_Good;
 	OpcUa_ReturnErrorIfArgumentNull(p_UserIdentityToken)
-	p_user_name=OpcUa_Alloc(sizeof(OpcUa_String));
+    p_user_name=(OpcUa_String*) OpcUa_Alloc(sizeof(OpcUa_String));
 	OpcUa_ReturnErrorIfAllocFailed(p_user_name)
 	uStatus=OpcUa_String_StrnCpy(p_user_name,&((OpcUa_UserNameIdentityToken*)p_UserIdentityToken->Body.EncodeableObject.Object)->UserName,OPCUA_STRING_LENDONTCARE);
 	return uStatus;
@@ -1276,7 +1272,7 @@ OpcUa_StatusCode check_securechannelId( OpcUa_Endpoint a_hEndpoint,  OpcUa_Handl
 		uStatus=OpcUa_Bad;
 		OpcUa_GotoError
 	}
-	p_securechannelId=OpcUa_Alloc(sizeof(OpcUa_UInt32));
+    p_securechannelId=(OpcUa_UInt32*) OpcUa_Alloc(sizeof(OpcUa_UInt32));
 	OpcUa_GotoErrorIfAllocFailed(p_securechannelId);
 	uStatus=OpcUa_Endpoint_GetMessageSecureChannelId(  a_hEndpoint,a_hContext,p_securechannelId);
 	if(OpcUa_IsBad(uStatus))
@@ -1446,11 +1442,11 @@ OpcUa_StatusCode getEndpoints(	OpcUa_Int32*                 a_pNoOfEndpoints,
 
 	 
 	
-	*a_ppEndpoints=OpcUa_Memory_Alloc(sizeof(OpcUa_EndpointDescription));
+    *a_ppEndpoints=(OpcUa_EndpointDescription*) OpcUa_Memory_Alloc(sizeof(OpcUa_EndpointDescription));
 	OpcUa_GotoErrorIfAllocFailed(*a_ppEndpoints)
 	OpcUa_EndpointDescription_Initialize(*a_ppEndpoints);
 
-	(*a_ppEndpoints)->UserIdentityTokens=OpcUa_Memory_Alloc(2*sizeof(OpcUa_UserTokenPolicy));
+    (*a_ppEndpoints)->UserIdentityTokens=(OpcUa_UserTokenPolicy*) OpcUa_Memory_Alloc(2*sizeof(OpcUa_UserTokenPolicy));
 	OpcUa_GotoErrorIfAllocFailed(((*a_ppEndpoints)->UserIdentityTokens))
 	OpcUa_UserTokenPolicy_Initialize((*a_ppEndpoints)->UserIdentityTokens);
 	OpcUa_UserTokenPolicy_Initialize(((*a_ppEndpoints)->UserIdentityTokens+1));
@@ -1526,7 +1522,7 @@ OpcUa_StatusCode fill_server_variable(OpcUa_ApplicationDescription* p_Server)
 	OpcUa_String_AttachCopy(&p_Server->ApplicationName.Locale, "en");
 	p_Server->ApplicationType=OpcUa_ApplicationType_Server;
 
-	p_Server->DiscoveryUrls=OpcUa_Memory_Alloc(sizeof(OpcUa_String));
+    p_Server->DiscoveryUrls=(OpcUa_String*) OpcUa_Memory_Alloc(sizeof(OpcUa_String));
 	OpcUa_GotoErrorIfAllocFailed(p_Server->DiscoveryUrls)
 	//p_Server->DiscoveryProfileUri
 	OpcUa_String_AttachCopy(p_Server->DiscoveryUrls, UATESTSERVER_ENDPOINT_URL);

@@ -1036,7 +1036,7 @@ OpcUa_Decoder;
     OpcUa_Int32 xValue; \
     uStatus = a_pDecoder->ReadEnumerated(a_pDecoder, #xName, &xType##_EnumeratedType, &xValue); \
     OpcUa_GotoErrorIfBad(uStatus); \
-    a_pValue->xName = xValue; \
+    a_pValue->xName = (xType) xValue; \
 }
 
 /*============================================================================

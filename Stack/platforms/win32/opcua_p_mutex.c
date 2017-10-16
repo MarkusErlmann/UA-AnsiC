@@ -432,7 +432,7 @@ OpcUa_StatusCode OPCUA_DLLCALL OpcUa_P_Mutex_CreateImp(OpcUa_Mutex* a_phMutex)
         *a_phMutex = OpcUa_Null;
     }
 
-    lpCriticalSection = OpcUa_P_Memory_Alloc(sizeof(CRITICAL_SECTION));
+    lpCriticalSection = (LPCRITICAL_SECTION) OpcUa_P_Memory_Alloc(sizeof(CRITICAL_SECTION));
 
     if(lpCriticalSection == NULL)
     {

@@ -1464,7 +1464,7 @@ OpcUa_Void OpcUa_P_Socket_HandleFdSet(  OpcUa_SocketManager     a_pSocketManager
 OpcUa_StatusCode OpcUa_P_Socket_HandleExternalEvent(    OpcUa_SocketManager a_pSocketManager)
 {
     OpcUa_UInt32                 uExternalEvent = OPCUA_SOCKET_NO_EVENT;
-    OpcUa_InternalSocketManager* pInternalSocketManager    = a_pSocketManager;
+    OpcUa_InternalSocketManager* pInternalSocketManager    = (OpcUa_InternalSocketManager*) a_pSocketManager;
 
 OpcUa_InitializeStatus(OpcUa_Module_Socket, "P_HandleExternalEvent");
 

@@ -154,7 +154,7 @@ static OpcUa_Int OpcUa_P_OpenSSL_CertificateStore_Verify_Callback(int a_ok, X509
 {
     OpcUa_P_OpenSSL_CertificateStore_Config*    pCertificateStoreCfg;
 
-    pCertificateStoreCfg = X509_STORE_CTX_get_app_data(a_pStore);
+    pCertificateStoreCfg = (OpcUa_P_OpenSSL_CertificateStore_Config*) X509_STORE_CTX_get_app_data(a_pStore);
     if(a_ok == 0)
     {
         /* certificate not ok */
@@ -848,7 +848,7 @@ OpcUa_StatusCode OpcUa_P_OpenSSL_PKI_LoadCertificate(
         {
             break;
         }
-        p = OpcUa_P_Memory_ReAlloc(buf, a_pCertificate->Length + i2d_X509(pTmpCert, NULL));
+        p = (OpcUa_Byte*) OpcUa_P_Memory_ReAlloc(buf, a_pCertificate->Length + i2d_X509(pTmpCert, NULL));
         OpcUa_GotoErrorIfAllocFailed(p);
         buf = p;
         p = buf + a_pCertificate->Length;
@@ -1206,7 +1206,7 @@ OpcUa_InitializeStatus(OpcUa_Module_P_OpenSSL, "PKI_ExtractCertificateData");
 
     if(a_pSubjectUri != OpcUa_Null || a_pSubjectIP != OpcUa_Null || a_pSubjectDNS != OpcUa_Null)
     {
-        pNames = X509_get_ext_d2i(pX509Cert, NID_subject_alt_name, OpcUa_Null, OpcUa_Null);
+        pNames = (GENERAL_NAMES*) X509_get_ext_d2i(pX509Cert, NID_subject_alt_name, OpcUa_Null, OpcUa_Null);
         if (pNames != OpcUa_Null)
         {
             int num;

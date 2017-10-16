@@ -1051,7 +1051,7 @@ OpcUa_ReturnStatusCode;
 OpcUa_BeginErrorHandling;
 
     /* unlock the channel mutex */
-    if(bIsLocked == OpcUa_True)
+    if(bIsLocked != OpcUa_False)
     {
         OPCUA_SECURECONNECTION_UNLOCK_REQUEST(pSecureConnection);
     }
@@ -2327,7 +2327,7 @@ OpcUa_BeginErrorHandling;
         }
     }
 
-    if(bIsLocked == OpcUa_True)
+    if(bIsLocked != OpcUa_False)
     {
         OPCUA_SECURECONNECTION_UNLOCK_REQUEST(pSecureConnection);
     }
@@ -2488,7 +2488,7 @@ OpcUa_BeginErrorHandling;
     }
 
     /* release lock on failure */
-    if(bIsLocked == OpcUa_True)
+    if(bIsLocked != OpcUa_False)
     {
         OPCUA_SECURECONNECTION_UNLOCK_REQUEST(pSecureConnection);
     }

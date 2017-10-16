@@ -74,7 +74,7 @@ OpcUa_InitializeStatus(OpcUa_Module_ProxyStub, "UpdateConfigString");
 
     if(OpcUa_ProxyStub_g_pConfigString == OpcUa_Null)
     {
-        OpcUa_ProxyStub_g_pConfigString = OpcUa_Alloc(OPCUA_CONFIG_STRING_SIZE + 1);
+        OpcUa_ProxyStub_g_pConfigString = (OpcUa_StringA) OpcUa_Alloc(OPCUA_CONFIG_STRING_SIZE + 1);
         OpcUa_GotoErrorIfAllocFailed(OpcUa_ProxyStub_g_pConfigString);
         OpcUa_MemSet(OpcUa_ProxyStub_g_pConfigString, 0, OPCUA_CONFIG_STRING_SIZE + 1);
     }

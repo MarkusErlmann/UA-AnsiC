@@ -280,7 +280,7 @@ OpcUa_InitializeStatus(OpcUa_Module_Utilities, "P_ParseUrl");
         OpcUa_UInt32 IpAddr;
         struct sockaddr_in* pAddr = (struct sockaddr_in*)pAddrInfo->ai_addr;
         OpcUa_P_Memory_Free(sHostName);
-        sHostName = OpcUa_P_Memory_Alloc(INET_ADDRSTRLEN);
+        sHostName = (OpcUa_StringA) OpcUa_P_Memory_Alloc(INET_ADDRSTRLEN);
         OpcUa_GotoErrorIfAllocFailed(sHostName);
 
         /* IP */
@@ -300,7 +300,7 @@ OpcUa_InitializeStatus(OpcUa_Module_Utilities, "P_ParseUrl");
     {
         struct sockaddr_in6* pAddr = (struct sockaddr_in6*)pAddrInfo->ai_addr;
         OpcUa_P_Memory_Free(sHostName);
-        sHostName = OpcUa_P_Memory_Alloc(INET6_ADDRSTRLEN);
+        sHostName = (OpcUa_StringA) OpcUa_P_Memory_Alloc(INET6_ADDRSTRLEN);
         OpcUa_GotoErrorIfAllocFailed(sHostName);
         if(IN6_IS_ADDR_V4MAPPED(&pAddr->sin6_addr))
         {

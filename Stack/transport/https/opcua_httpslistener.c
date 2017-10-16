@@ -562,7 +562,7 @@ OpcUa_StatusCode OpcUa_HttpsListener_AddStreamToSendQueue(
 
 OpcUa_InitializeStatus(OpcUa_Module_HttpListener, "OpcUa_HttpsListener_AddStreamToSendQueue");
 
-    pEntry = OpcUa_Alloc(sizeof(OpcUa_BufferList));
+    pEntry = (OpcUa_BufferList*) OpcUa_Alloc(sizeof(OpcUa_BufferList));
     OpcUa_GotoErrorIfAllocFailed(pEntry);
 
     do
@@ -587,7 +587,7 @@ OpcUa_InitializeStatus(OpcUa_Module_HttpListener, "OpcUa_HttpsListener_AddStream
                 else
                 {
                     /* continue with next entry */
-                    pEntry = OpcUa_Alloc(sizeof(OpcUa_BufferList));
+                    pEntry = (OpcUa_BufferList*) OpcUa_Alloc(sizeof(OpcUa_BufferList));
                 }
             }
             else
@@ -660,7 +660,7 @@ OpcUa_InitializeStatus(OpcUa_Module_HttpListener, "OpcUa_HttpsListener_EndSendRe
         /* delete without flushing and decrement request count */
         OpcUa_HttpsStream_Delete((OpcUa_Stream**)a_ppOutputStream);
     }
-    else if(pListenerConnection->bConnected == OpcUa_True)
+    else if(pListenerConnection->bConnected != OpcUa_False)
     {
         uStatus = (*a_ppOutputStream)->Close((OpcUa_Stream*)*a_ppOutputStream);
 
@@ -1774,7 +1774,7 @@ OpcUa_InitializeStatus(OpcUa_Module_HttpConnection, "SslEventHandler");
 
     pHttpsConnection->hValidationResult = a_uResult;
     pHttpsConnection->bsClientCertificate.Length = a_pCertificate->Length;
-    pHttpsConnection->bsClientCertificate.Data = OpcUa_Alloc(a_pCertificate->Length);
+    pHttpsConnection->bsClientCertificate.Data = (OpcUa_Byte*) OpcUa_Alloc(a_pCertificate->Length);
     OpcUa_GotoErrorIfAllocFailed(pHttpsConnection->bsClientCertificate.Data);
     OpcUa_MemCpy(pHttpsConnection->bsClientCertificate.Data, pHttpsConnection->bsClientCertificate.Length,
                  a_pCertificate->Data, a_pCertificate->Length);

@@ -600,7 +600,7 @@ OpcUa_InitializeStatus(OpcUa_Module_HttpStream, "Write");
             /* skip onto the next buffer */
             pHttpOutputStream->nBuffers++;
 
-            pData = OpcUa_Alloc(OPCUA_HTTPS_MAX_SEND_BUFFER_LENGTH);
+            pData = (OpcUa_Byte*) OpcUa_Alloc(OPCUA_HTTPS_MAX_SEND_BUFFER_LENGTH);
             OpcUa_GotoErrorIfAllocFailed(pData);
 
             /* create an internal buffer. */
@@ -1871,7 +1871,7 @@ OpcUa_InitializeStatus(OpcUa_Module_HttpStream, "CreateOutput");
 
     OpcUa_ReferenceParameter(a_sMessageHeaders);
 
-    pHeaderData = OpcUa_Alloc(OPCUA_HTTPS_MAX_SEND_HEADER_LENGTH);
+    pHeaderData = (OpcUa_Byte*) OpcUa_Alloc(OPCUA_HTTPS_MAX_SEND_HEADER_LENGTH);
     OpcUa_GotoErrorIfAllocFailed(pHeaderData);
 
     uStatus = OpcUa_Buffer_Initialize(  &(pHttpOutputStream->HeaderBuffer),
@@ -2220,7 +2220,7 @@ OpcUa_InitializeStatus(OpcUa_Module_HttpStream, "ReadLine");
         }
         else if(chAsciiChar == '\n')
         {
-            OpcUa_GotoErrorIfTrue(bCR != OpcUa_True, OpcUa_BadDecodingError);
+            OpcUa_GotoErrorIfTrue(bCR == OpcUa_False, OpcUa_BadDecodingError);
             break;
         }
     } /* peek until \r\n */
@@ -2540,7 +2540,7 @@ OpcUa_StatusCode OpcUa_HttpsStream_GetRequestUri(OpcUa_InputStream* a_pInputStre
                                                  OpcUa_Boolean      a_bCopy,
                                                  OpcUa_String*      a_pRequestUri)
 {
-    OpcUa_HttpsInputStream* pHttpInputStream = a_pInputStream->Handle;
+    OpcUa_HttpsInputStream* pHttpInputStream = (OpcUa_HttpsInputStream*) a_pInputStream->Handle;
 
 OpcUa_InitializeStatus(OpcUa_Module_HttpStream, "GetRequestUri");
 

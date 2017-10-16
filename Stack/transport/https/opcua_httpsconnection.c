@@ -945,7 +945,7 @@ static OpcUa_StatusCode OpcUa_HttpsConnection_AddStreamToSendQueue(
 
 OpcUa_InitializeStatus(OpcUa_Module_HttpConnection, "OpcUa_HttpsConnection_AddStreamToSendQueue");
 
-    pEntry = OpcUa_Alloc(sizeof(OpcUa_BufferList));
+    pEntry = (OpcUa_BufferList*) OpcUa_Alloc(sizeof(OpcUa_BufferList));
     OpcUa_GotoErrorIfAllocFailed(pEntry);
 
     do
@@ -969,7 +969,7 @@ OpcUa_InitializeStatus(OpcUa_Module_HttpConnection, "OpcUa_HttpsConnection_AddSt
                 else
                 {
                     /* continue with next entry */
-                    pEntry = OpcUa_Alloc(sizeof(OpcUa_BufferList));
+                    pEntry = (OpcUa_BufferList*) OpcUa_Alloc(sizeof(OpcUa_BufferList));
                 }
             }
             else
@@ -1078,7 +1078,7 @@ OpcUa_InitializeStatus(OpcUa_Module_HttpConnection, "SslEventHandler");
     }
     else
     {
-        pHttpsConnection->bsUsedServerCertificate.Data = OpcUa_Alloc(a_pCertificate->Length);
+        pHttpsConnection->bsUsedServerCertificate.Data = (OpcUa_Byte*) OpcUa_Alloc(a_pCertificate->Length);
         OpcUa_GotoErrorIfAllocFailed(pHttpsConnection->bsUsedServerCertificate.Data);
         pHttpsConnection->bsUsedServerCertificate.Length = a_pCertificate->Length;
         OpcUa_MemCpy(pHttpsConnection->bsUsedServerCertificate.Data,

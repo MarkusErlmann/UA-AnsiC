@@ -117,7 +117,7 @@ static OpcUa_Char* OpcUa_P_Win32_MultiByteToWideChar(OpcUa_StringA a_sSrc)
         0,
         pData,
         uSize,
-        pUnicode,
+        (LPWSTR) pUnicode,
         iLength);
 
     if (iResult == 0)
@@ -494,7 +494,7 @@ OpcUa_StatusCode OpcUa_P_Win32_PKI_LoadCertificate(
     OpcUa_ReturnErrorIfArgumentNull(a_pCertificate);
 
     hSystemStore = (HCERTSTORE)a_pCertificateStore;
-    pSubjectName = OpcUa_P_Win32_MultiByteToWideChar(a_pLoadHandle);
+    pSubjectName = OpcUa_P_Win32_MultiByteToWideChar((OpcUa_StringA) a_pLoadHandle);
 
     /*** FIND CERTIFICATE IN SYSTEM STORE ***/
     if(pTargetCert = CertFindCertificateInStore(

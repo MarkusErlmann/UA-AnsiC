@@ -68,7 +68,7 @@ OpcUa_StatusCode initialize_value_attribute_of_variablenodes_variabletypenodes(O
 	all_ValueAttribute_of_VariableTypeNodes_VariableNodes[1].ArrayType						=OpcUa_VariantArrayType_Array;
 	all_ValueAttribute_of_VariableTypeNodes_VariableNodes[1].Datatype						=OpcUaId_String;
 	all_ValueAttribute_of_VariableTypeNodes_VariableNodes[1].Value.Array.Length				=8;
-	all_ValueAttribute_of_VariableTypeNodes_VariableNodes[1].Value.Array.Value.StringArray	=OpcUa_Memory_Alloc(8*sizeof(OpcUa_StringA));
+	all_ValueAttribute_of_VariableTypeNodes_VariableNodes[1].Value.Array.Value.StringArray	=(OpcUa_StringA*) OpcUa_Memory_Alloc(8*sizeof(OpcUa_StringA));
 	OpcUa_ReturnErrorIfAllocFailed((all_ValueAttribute_of_VariableTypeNodes_VariableNodes[1].Value.Array.Value.StringArray))
 	*(all_ValueAttribute_of_VariableTypeNodes_VariableNodes[1].Value.Array.Value.StringArray+0)="RUNNING_0";
 	*(all_ValueAttribute_of_VariableTypeNodes_VariableNodes[1].Value.Array.Value.StringArray+1)="FAILED_1";
@@ -84,7 +84,7 @@ OpcUa_StatusCode initialize_value_attribute_of_variablenodes_variabletypenodes(O
 	all_ValueAttribute_of_VariableTypeNodes_VariableNodes[2].ArrayType						=OpcUa_VariantArrayType_Array;
 	all_ValueAttribute_of_VariableTypeNodes_VariableNodes[2].Datatype						=OpcUaId_String;
 	all_ValueAttribute_of_VariableTypeNodes_VariableNodes[2].Value.Array.Length				=1;
-	all_ValueAttribute_of_VariableTypeNodes_VariableNodes[2].Value.Array.Value.StringArray	=OpcUa_Memory_Alloc(sizeof(OpcUa_StringA));
+	all_ValueAttribute_of_VariableTypeNodes_VariableNodes[2].Value.Array.Value.StringArray	=(OpcUa_StringA*) OpcUa_Memory_Alloc(sizeof(OpcUa_StringA));
 	OpcUa_ReturnErrorIfAllocFailed((all_ValueAttribute_of_VariableTypeNodes_VariableNodes[2].Value.Array.Value.StringArray))
 	*(all_ValueAttribute_of_VariableTypeNodes_VariableNodes[2].Value.Array.Value.StringArray+0)="Nano_Server";
 //--------------------------
@@ -93,7 +93,7 @@ OpcUa_StatusCode initialize_value_attribute_of_variablenodes_variabletypenodes(O
 	all_ValueAttribute_of_VariableTypeNodes_VariableNodes[3].ArrayType						=OpcUa_VariantArrayType_Array;
 	all_ValueAttribute_of_VariableTypeNodes_VariableNodes[3].Datatype						=OpcUaId_String;
 	all_ValueAttribute_of_VariableTypeNodes_VariableNodes[3].Value.Array.Length				=2;
-	all_ValueAttribute_of_VariableTypeNodes_VariableNodes[3].Value.Array.Value.StringArray	=OpcUa_Memory_Alloc(2*sizeof(OpcUa_StringA));
+	all_ValueAttribute_of_VariableTypeNodes_VariableNodes[3].Value.Array.Value.StringArray	=(OpcUa_StringA*) OpcUa_Memory_Alloc(2*sizeof(OpcUa_StringA));
 	OpcUa_ReturnErrorIfAllocFailed((all_ValueAttribute_of_VariableTypeNodes_VariableNodes[3].Value.Array.Value.StringArray))
 	*(all_ValueAttribute_of_VariableTypeNodes_VariableNodes[3].Value.Array.Value.StringArray+0)="http://opcfoundation.org/UA/";
 	*(all_ValueAttribute_of_VariableTypeNodes_VariableNodes[3].Value.Array.Value.StringArray+1)="http://nanonamespace";
@@ -103,7 +103,7 @@ OpcUa_StatusCode initialize_value_attribute_of_variablenodes_variabletypenodes(O
 	all_ValueAttribute_of_VariableTypeNodes_VariableNodes[4].ArrayType						=OpcUa_VariantArrayType_Array;
 	all_ValueAttribute_of_VariableTypeNodes_VariableNodes[4].Datatype						=OpcUaId_String;
 	all_ValueAttribute_of_VariableTypeNodes_VariableNodes[4].Value.Array.Length				=1;
-	all_ValueAttribute_of_VariableTypeNodes_VariableNodes[4].Value.Array.Value.StringArray	=OpcUa_Memory_Alloc(sizeof(OpcUa_StringA));
+	all_ValueAttribute_of_VariableTypeNodes_VariableNodes[4].Value.Array.Value.StringArray	=(OpcUa_StringA*) OpcUa_Memory_Alloc(sizeof(OpcUa_StringA));
 	OpcUa_ReturnErrorIfAllocFailed((all_ValueAttribute_of_VariableTypeNodes_VariableNodes[4].Value.Array.Value.StringArray))
 	*(all_ValueAttribute_of_VariableTypeNodes_VariableNodes[4].Value.Array.Value.StringArray+0)="http://opcfoundation.org/UA-Profile/Server/NanoEmbeddedDevice";
 //--------------------------
@@ -112,7 +112,7 @@ OpcUa_StatusCode initialize_value_attribute_of_variablenodes_variabletypenodes(O
 	all_ValueAttribute_of_VariableTypeNodes_VariableNodes[5].ArrayType						=OpcUa_VariantArrayType_Array;
 	all_ValueAttribute_of_VariableTypeNodes_VariableNodes[5].Datatype						=OpcUaId_String;
 	all_ValueAttribute_of_VariableTypeNodes_VariableNodes[5].Value.Array.Length				=1;
-	all_ValueAttribute_of_VariableTypeNodes_VariableNodes[5].Value.Array.Value.StringArray	=OpcUa_Memory_Alloc(sizeof(OpcUa_StringA));
+	all_ValueAttribute_of_VariableTypeNodes_VariableNodes[5].Value.Array.Value.StringArray	=(OpcUa_StringA*) OpcUa_Memory_Alloc(sizeof(OpcUa_StringA));
 	OpcUa_ReturnErrorIfAllocFailed((all_ValueAttribute_of_VariableTypeNodes_VariableNodes[5].Value.Array.Value.StringArray))
 	*(all_ValueAttribute_of_VariableTypeNodes_VariableNodes[5].Value.Array.Value.StringArray+0)="en";
 //--------------------------
@@ -131,7 +131,7 @@ OpcUa_StatusCode initialize_value_attribute_of_variablenodes_variabletypenodes(O
 
 //Variable: DATA_VALUE
 	all_ValueAttribute_of_VariableTypeNodes_VariableNodes[8].ArrayType						=OpcUa_VariantArrayType_Array;
-	all_ValueAttribute_of_VariableTypeNodes_VariableNodes[8].Value.Array.Value.DoubleArray	=OpcUa_Memory_Alloc(3*sizeof(OpcUa_Double));
+	all_ValueAttribute_of_VariableTypeNodes_VariableNodes[8].Value.Array.Value.DoubleArray	=(OpcUa_Double*) OpcUa_Memory_Alloc(3*sizeof(OpcUa_Double));
 	OpcUa_ReturnErrorIfAllocFailed((all_ValueAttribute_of_VariableTypeNodes_VariableNodes[8].Value.Array.Value.DoubleArray))
 	all_ValueAttribute_of_VariableTypeNodes_VariableNodes[8].Datatype						=OpcUaId_Double;
 	all_ValueAttribute_of_VariableTypeNodes_VariableNodes[8].Value.Array.Length				=3;

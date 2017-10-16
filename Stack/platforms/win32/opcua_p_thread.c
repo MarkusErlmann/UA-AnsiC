@@ -296,7 +296,7 @@ OpcUa_Void OPCUA_DLLCALL OpcUa_P_Thread_Delete(OpcUa_RawThread* pRawThread)
     }
     else
     {
-        pThreadArgs = *pRawThread;
+        pThreadArgs = (OpcUa_P_ThreadArg*) *pRawThread;
 
         if(INVALID_HANDLE_VALUE != pThreadArgs->hThread)
         {

@@ -37,9 +37,16 @@
 
 #pragma warning (disable:4127) /* suppress "conditional expression is constant" in macros */
 
+#define OPCUA_COMPILE_AS_CPP 1
+
 #ifdef __cplusplus
+# ifdef OPCUA_COMPILE_AS_CPP
+#  define OPCUA_BEGIN_EXTERN_C
+#  define OPCUA_END_EXTERN_C
+# else /* OPCUA_COMPILE_AS_CPP */
 # define OPCUA_BEGIN_EXTERN_C extern "C" {
 # define OPCUA_END_EXTERN_C }
+# endif /* OPCUA_COMPILE_AS_CPP */
 #else
 # define OPCUA_BEGIN_EXTERN_C
 # define OPCUA_END_EXTERN_C

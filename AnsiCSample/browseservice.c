@@ -44,13 +44,7 @@
 #define compare_nodes(_NodeId_1,_NodeId_2) (_NodeId_1.IdentifierType==_NodeId_2.IdentifierType) && (_NodeId_1.NamespaceIndex==_NodeId_2.NamespaceIndex) &&(_NodeId_1.Identifier.Numeric==_NodeId_2.Identifier.Numeric)
 /*compare_nodes: liefert (1) bei Gleichheit */
 
-
-extern enum
-{
-	free_to_use=0,
-	occupied=1
-}continuation_point;
-
+extern continuation_point Cont_Point_State;
 
 /*============================================================================
  * method which implements the Browse service.
@@ -133,14 +127,14 @@ OpcUa_StatusCode my_Browse(
 		OpcUa_GotoError
 	}
 
-	continuation_point=free_to_use;
+    Cont_Point_State =free_to_use;
 	
 	if(a_nRequestedMaxReferencesPerNode>0 && a_nRequestedMaxReferencesPerNode<MAX_NO_OF_RETURNED_REFERENCES)
 		max_ref_per_node=a_nRequestedMaxReferencesPerNode;
 	else
 		max_ref_per_node=MAX_NO_OF_RETURNED_REFERENCES;
 
-	*a_pResults=OpcUa_Memory_Alloc(a_nNoOfNodesToBrowse*sizeof(OpcUa_BrowseResult));
+    *a_pResults=(OpcUa_BrowseResult*) OpcUa_Memory_Alloc(a_nNoOfNodesToBrowse*sizeof(OpcUa_BrowseResult));
 	OpcUa_GotoErrorIfAllocFailed((*a_pResults))
 	
 	*a_pNoOfResults=a_nNoOfNodesToBrowse;
@@ -148,7 +142,7 @@ OpcUa_StatusCode my_Browse(
 		for(m=0;m<a_nNoOfNodesToBrowse;m++)/*durchsuche alle  Startknoten*************************************************/
 		{
 			OpcUa_BrowseResult_Initialize((*a_pResults+m));
-			pointer_to_node= search_for_node((a_pNodesToBrowse+m)->NodeId);
+            pointer_to_node= (_BaseAttribute_*) search_for_node((a_pNodesToBrowse+m)->NodeId);
 			#ifndef NO_DEBUGING_
 			MY_TRACE("\nBrowse nach NodeId:|%d|  Namespaceindex: |%d|\n",(a_pNodesToBrowse+m)->NodeId.Identifier.Numeric,(a_pNodesToBrowse+m)->NodeId.NamespaceIndex);
 			#endif /*_DEBUGING_*/
@@ -203,7 +197,7 @@ OpcUa_StatusCode browse(OpcUa_BrowseDescription* a_pNodesToBrowse,OpcUa_BrowseRe
 	extern OpcUa_UInt32			max_ref_per_node;
 	OpcUa_InitializeStatus(OpcUa_Module_Server, "browse");
 
-	if(continuation_point==occupied)
+    if(Cont_Point_State ==occupied)
 	{
 		return OpcUa_BadNoContinuationPoints;
 	}
@@ -230,28 +224,28 @@ OpcUa_StatusCode browse(OpcUa_BrowseDescription* a_pNodesToBrowse,OpcUa_BrowseRe
 			pointer_to_targetnode=(_BaseAttribute_*) search_for_node(((pointer_to_node)->References+i)->Target_NodeId);
 			if(pointer_to_targetnode!=OpcUa_Null)
 			{
-			if(/*pruefe filtermasken: ReferencesTypeId, NodeClassMask*/ ist_unterknoten(a_pNodesToBrowse->ReferenceTypeId,(pointer_to_node->References+i)->ReferenceTypeId,a_pNodesToBrowse->IncludeSubtypes)==OpcUa_True && check_Mask(a_pNodesToBrowse->NodeClassMask, pointer_to_targetnode->NodeClass)==OpcUa_True)
+            if(/*pruefe filtermasken: ReferencesTypeId, NodeClassMask*/ ist_unterknoten(a_pNodesToBrowse->ReferenceTypeId,(pointer_to_node->References+i)->ReferenceTypeId,a_pNodesToBrowse->IncludeSubtypes)!=OpcUa_False && check_Mask(a_pNodesToBrowse->NodeClassMask, pointer_to_targetnode->NodeClass)!=OpcUa_False)
 			{	
-				if(/*pruefe filtermaske browsedir.*/check_dir(a_pNodesToBrowse->BrowseDirection,(pointer_to_node->References+i))==OpcUa_True)
+                if(/*pruefe filtermaske browsedir.*/check_dir(a_pNodesToBrowse->BrowseDirection,(pointer_to_node->References+i))!=OpcUa_False)
 				{
 								#ifndef NO_DEBUGING_
 									MY_TRACE("TargetNode wird zurueckgeliefert:%s",pointer_to_targetnode->DisplayName);
 								#endif /*_DEBUGING_*/
-								a_pResults->References=OpcUa_Memory_ReAlloc(a_pResults->References,(NoofRef+1)*sizeof(OpcUa_ReferenceDescription));
+                                a_pResults->References=(OpcUa_ReferenceDescription*) OpcUa_Memory_ReAlloc(a_pResults->References,(NoofRef+1)*sizeof(OpcUa_ReferenceDescription));
 								OpcUa_GotoErrorIfAllocFailed((a_pResults->References))
 								OpcUa_ReferenceDescription_Initialize((a_pResults ->References+NoofRef));
 
 								/*NodeId of ReferenceType*/
-								if(check_Mask(a_pNodesToBrowse->ResultMask,OpcUa_BrowseResultMask_ReferenceTypeId)== OpcUa_True)/*wenn False wird ausmaskiert*/
+                                if(check_Mask(a_pNodesToBrowse->ResultMask,OpcUa_BrowseResultMask_ReferenceTypeId)!= OpcUa_False)/*wenn False wird ausmaskiert*/
 								{
 									(a_pResults ->References+NoofRef)->ReferenceTypeId=(pointer_to_node->References+i)->ReferenceTypeId;
 								}
 								/*************************/
 								
 								/*IsForward criteria*/
-								if(check_Mask(a_pNodesToBrowse->ResultMask,OpcUa_BrowseResultMask_IsForward)== OpcUa_True)/*wenn False wird ausmaskiert*/
+                                if(check_Mask(a_pNodesToBrowse->ResultMask,OpcUa_BrowseResultMask_IsForward)!= OpcUa_False)/*wenn False wird ausmaskiert*/
 								{
-									if(((pointer_to_node)->References+i)->IsInverse==OpcUa_True)
+                                    if(((pointer_to_node)->References+i)->IsInverse!=OpcUa_False)
 									{
 										(a_pResults ->References+NoofRef)->IsForward=OpcUa_False;
 									}
@@ -272,7 +266,7 @@ OpcUa_StatusCode browse(OpcUa_BrowseDescription* a_pNodesToBrowse,OpcUa_BrowseRe
 								/**********************/
 
 								/*BrowseName of target Node*/
-								if(check_Mask(a_pNodesToBrowse->ResultMask,OpcUa_BrowseResultMask_BrowseName)== OpcUa_True)/*wenn False wird ausmaskiert*/
+                                if(check_Mask(a_pNodesToBrowse->ResultMask,OpcUa_BrowseResultMask_BrowseName)!= OpcUa_False)/*wenn False wird ausmaskiert*/
 								{
 									OpcUa_String_AttachCopy(&((a_pResults ->References+NoofRef)->BrowseName.Name),pointer_to_targetnode->BrowseName);
 									(a_pResults ->References+NoofRef)->BrowseName.NamespaceIndex=pointer_to_targetnode->NodeId.NamespaceIndex;
@@ -280,7 +274,7 @@ OpcUa_StatusCode browse(OpcUa_BrowseDescription* a_pNodesToBrowse,OpcUa_BrowseRe
 								/***************************/
 
 								/*DisplayName of target Node*/
-								if(check_Mask(a_pNodesToBrowse->ResultMask,OpcUa_BrowseResultMask_DisplayName)== OpcUa_True)/*wenn False wird ausmaskiert*/
+                                if(check_Mask(a_pNodesToBrowse->ResultMask,OpcUa_BrowseResultMask_DisplayName)!= OpcUa_False)/*wenn False wird ausmaskiert*/
 								{
 									OpcUa_String_AttachCopy(&(a_pResults ->References+NoofRef)->DisplayName.Text,pointer_to_targetnode->DisplayName);
 									OpcUa_String_AttachCopy(&(a_pResults ->References+NoofRef)->DisplayName.Locale,"");
@@ -288,14 +282,14 @@ OpcUa_StatusCode browse(OpcUa_BrowseDescription* a_pNodesToBrowse,OpcUa_BrowseRe
 								/***************************/
 
 								/*NodeClass of target Node*/
-								if(check_Mask(a_pNodesToBrowse->ResultMask,OpcUa_BrowseResultMask_NodeClass)== OpcUa_True)/*wenn False wird ausmaskiert*/
+                                if(check_Mask(a_pNodesToBrowse->ResultMask,OpcUa_BrowseResultMask_NodeClass) != OpcUa_False)/*wenn False wird ausmaskiert*/
 								{
 									(a_pResults ->References+NoofRef)->NodeClass=pointer_to_targetnode->NodeClass;
 								}
 								/***************************/
 
 								/*TypeDefitition of target Node*/
-								if(check_Mask(a_pNodesToBrowse->ResultMask,OpcUa_BrowseResultMask_TypeDefinition)== OpcUa_True)/*wenn False wird ausmaskiert*/
+                                if(check_Mask(a_pNodesToBrowse->ResultMask,OpcUa_BrowseResultMask_TypeDefinition) != OpcUa_False)/*wenn False wird ausmaskiert*/
 								{
 									if((pointer_to_targetnode->NodeClass)==OpcUa_NodeClass_Object ||(pointer_to_targetnode->NodeClass)==OpcUa_NodeClass_Variable )
 									{
@@ -314,7 +308,7 @@ OpcUa_StatusCode browse(OpcUa_BrowseDescription* a_pNodesToBrowse,OpcUa_BrowseRe
 								/*******************************/
 								if(NoofRef >= max_ref_per_node)
 								{
-									if(need_continuationpoint(a_pNodesToBrowse,(i+1))==OpcUa_True )
+                                    if(need_continuationpoint(a_pNodesToBrowse,(i+1)) != OpcUa_False)
 									{
 										a_pResults ->ContinuationPoint.Data=(OpcUa_Byte*)OpcUa_Memory_Alloc(sizeof(_my_continuationpoint_));
 										OpcUa_GotoErrorIfAllocFailed((a_pResults ->ContinuationPoint.Data))
@@ -327,7 +321,7 @@ OpcUa_StatusCode browse(OpcUa_BrowseDescription* a_pNodesToBrowse,OpcUa_BrowseRe
 											MY_TRACE("\nContinuationPoint (Identifier:%d) fuer diesen Start Knoten gesetzt.\n",Continuation_Point_Identifier);
 											MY_TRACE("und zeigt auf naechsten TargetNode:%s\n",((_BaseAttribute_*) search_for_node(((pointer_to_node)->References+(i+1))->Target_NodeId))->DisplayName);
 										#endif /*_DEBUGING_*/
-										continuation_point=occupied;
+                                            Cont_Point_State =occupied;
 										break;
 									}
 								}
@@ -479,7 +473,7 @@ OpcUa_Boolean  ist_unterknoten( OpcUa_NodeId  start_NodeId, OpcUa_NodeId  gesuch
 						p_Node_2=(_BaseAttribute_*)search_for_node((p_Node->References+z)->Target_NodeId);
 						if((p_Node_2->NoOfReferences)!=0 )
 						{
-							if(ist_unterknoten((p_Node->References+z)->Target_NodeId,gesuchter_knoten,OpcUa_True)==OpcUa_True)
+                            if(ist_unterknoten((p_Node->References+z)->Target_NodeId,gesuchter_knoten,OpcUa_True) != OpcUa_False)
 								return OpcUa_True;
 						}
 					}
@@ -513,7 +507,7 @@ OpcUa_Boolean check_dir(OpcUa_BrowseDirection browsedir,_ReferenceNode_* p_ref)
 	{
 		if(browsedir==OpcUa_BrowseDirection_Forward && p_ref->IsInverse==OpcUa_False)
 			return OpcUa_True;
-		if(browsedir==OpcUa_BrowseDirection_Inverse && p_ref->IsInverse==OpcUa_True)
+        if(browsedir==OpcUa_BrowseDirection_Inverse && p_ref->IsInverse != OpcUa_False)
 			return OpcUa_True;
 	}
 	return OpcUa_False;
@@ -534,9 +528,9 @@ OpcUa_Boolean need_continuationpoint(OpcUa_BrowseDescription* NodeToBrowse,OpcUa
 	for(i=x;i<((pointer_to_node)->NoOfReferences);i++)/*iterate over all references of startnode*******/
 	{
 		pointer_to_targetnode=(_BaseAttribute_*) search_for_node(((pointer_to_node)->References+i)->Target_NodeId);
-		if( ist_unterknoten(NodeToBrowse->ReferenceTypeId,(pointer_to_node->References+i)->ReferenceTypeId,NodeToBrowse->IncludeSubtypes)==OpcUa_True && check_Mask(NodeToBrowse->NodeClassMask, pointer_to_targetnode->NodeClass))
+        if( ist_unterknoten(NodeToBrowse->ReferenceTypeId,(pointer_to_node->References+i)->ReferenceTypeId,NodeToBrowse->IncludeSubtypes) != OpcUa_False && check_Mask(NodeToBrowse->NodeClassMask, pointer_to_targetnode->NodeClass))
 		{	
-			if(check_dir(NodeToBrowse->BrowseDirection,(pointer_to_node->References+i))==OpcUa_True)
+            if(check_dir(NodeToBrowse->BrowseDirection,(pointer_to_node->References+i)) != OpcUa_False)
 			{
 				counter++;				
 			}

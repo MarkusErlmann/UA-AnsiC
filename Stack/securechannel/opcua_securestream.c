@@ -1019,7 +1019,7 @@ OpcUa_InitializeStatus(OpcUa_Module_SecureStream, "Flush");
 
         if(pSecureChannel->bAsyncWriteInProgress)
         {
-            OpcUa_BufferList* pBufferEntry = OpcUa_Alloc(sizeof(OpcUa_BufferList));
+            OpcUa_BufferList* pBufferEntry = (OpcUa_BufferList*) OpcUa_Alloc(sizeof(OpcUa_BufferList));
             OpcUa_GotoErrorIfAllocFailed(pBufferEntry);
             pBufferEntry->Buffer = pSecureStream->Buffers[0];
             pBufferEntry->Buffer.Position = 0;
@@ -1054,7 +1054,7 @@ OpcUa_InitializeStatus(OpcUa_Module_SecureStream, "Flush");
                                                                                 a_bLastCall);
             if(OpcUa_IsEqual(OpcUa_BadWouldBlock))
             {
-                OpcUa_BufferList* pBufferList = OpcUa_Alloc(sizeof(OpcUa_BufferList));
+                OpcUa_BufferList* pBufferList = (OpcUa_BufferList*) OpcUa_Alloc(sizeof(OpcUa_BufferList));
                 OpcUa_GotoErrorIfAllocFailed(pBufferList);
                 /* regain control over the buffer object */
                 uStatus = pSecureStream->InnerStrm->DetachBuffer(   pSecureStream->InnerStrm,
@@ -1157,7 +1157,7 @@ OpcUa_InitializeStatus(OpcUa_Module_SecureStream, "Flush");
 OpcUa_ReturnStatusCode;
 OpcUa_BeginErrorHandling;
 
-    if(pSecureStream->IsLocked == OpcUa_True && a_bLastCall == OpcUa_True)
+    if(pSecureStream->IsLocked != OpcUa_False && a_bLastCall != OpcUa_False)
     {
         pSecureChannel->UnlockWriteMutex(pSecureChannel);
         pSecureStream->IsLocked = OpcUa_False;
@@ -1348,7 +1348,7 @@ static OpcUa_Void OpcUa_SecureStream_Delete(OpcUa_Stream** a_ppStrm)
 
         pStream = (OpcUa_SecureStream*)(*a_ppStrm)->Handle;
 
-        if (pStream->IsLocked == OpcUa_True && pStream->pSecureChannel != OpcUa_Null)
+        if (pStream->IsLocked != OpcUa_False && pStream->pSecureChannel != OpcUa_Null)
         {
             pStream->pSecureChannel->UnlockWriteMutex(pStream->pSecureChannel);
             pStream->IsLocked = OpcUa_False;

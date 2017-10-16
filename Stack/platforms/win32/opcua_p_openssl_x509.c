@@ -238,7 +238,7 @@ OpcUa_StatusCode OpcUa_P_OpenSSL_X509_SelfSigned_Custom_Create(
         ASN1_INTEGER* pSerialNumber = X509_get_serialNumber(pCert);
 
         pSerialNumber->type   = V_ASN1_INTEGER;
-        pSerialNumber->data   = OPENSSL_realloc(pSerialNumber->data, 16);
+        pSerialNumber->data   = (unsigned char*) OPENSSL_realloc(pSerialNumber->data, 16);
         pSerialNumber->length = 16;
 
         if(pSerialNumber->data == NULL || OpcUa_P_Guid_Create((OpcUa_Guid*)pSerialNumber->data) == NULL)

@@ -111,7 +111,7 @@ OpcUa_StatusCode my_Read(
 		OpcUa_GotoError;
 	}
 
-	*a_pResults=OpcUa_Alloc(a_nNoOfNodesToRead*sizeof(OpcUa_DataValue));
+    *a_pResults= (OpcUa_DataValue*) OpcUa_Alloc(a_nNoOfNodesToRead*sizeof(OpcUa_DataValue));
 	OpcUa_GotoErrorIfAllocFailed((*a_pResults))
 	
 
@@ -126,7 +126,7 @@ OpcUa_StatusCode my_Read(
 			{
 				if((a_pNodesToRead+n)->AttributeId==OpcUa_Attributes_NodeId)
 				{
-					((*a_pResults)+n)->Value.Value.NodeId=OpcUa_Memory_Alloc(sizeof(OpcUa_NodeId));
+                    ((*a_pResults)+n)->Value.Value.NodeId= (OpcUa_NodeId*) OpcUa_Memory_Alloc(sizeof(OpcUa_NodeId));
 					if(((*a_pResults)+n)->Value.Value.NodeId !=OpcUa_Null)
 					{
 						OpcUa_NodeId_Initialize(((*a_pResults)+n)->Value.Value.NodeId);
@@ -147,7 +147,7 @@ OpcUa_StatusCode my_Read(
 				}
 				if((a_pNodesToRead+n)->AttributeId==OpcUa_Attributes_BrowseName)
 				{
-					((*a_pResults)+n)->Value.Value.QualifiedName=OpcUa_Memory_Alloc(sizeof(OpcUa_QualifiedName));
+                    ((*a_pResults)+n)->Value.Value.QualifiedName= (OpcUa_QualifiedName*) OpcUa_Memory_Alloc(sizeof(OpcUa_QualifiedName));
 					if(((*a_pResults)+n)->Value.Value.QualifiedName!=OpcUa_Null)
 					{
 						OpcUa_QualifiedName_Initialize(((*a_pResults)+n)->Value.Value.QualifiedName);
@@ -163,7 +163,7 @@ OpcUa_StatusCode my_Read(
 				}
 				if((a_pNodesToRead+n)->AttributeId==OpcUa_Attributes_DisplayName)
 				{
-					((*a_pResults)+n)->Value.Value.LocalizedText=OpcUa_Memory_Alloc(sizeof(OpcUa_LocalizedText));
+                    ((*a_pResults)+n)->Value.Value.LocalizedText= (OpcUa_LocalizedText*) OpcUa_Memory_Alloc(sizeof(OpcUa_LocalizedText));
 					if(((*a_pResults)+n)->Value.Value.LocalizedText!=OpcUa_Null)
 					{
 						OpcUa_LocalizedText_Initialize(((*a_pResults)+n)->Value.Value.LocalizedText);
@@ -206,7 +206,7 @@ OpcUa_StatusCode my_Read(
 							}
 							if((a_pNodesToRead+n)->AttributeId==OpcUa_Attributes_DataType)
 							{
-								((*a_pResults)+n)->Value.Value.NodeId=OpcUa_Memory_Alloc(sizeof(OpcUa_NodeId));
+                                ((*a_pResults)+n)->Value.Value.NodeId= (OpcUa_NodeId*) OpcUa_Memory_Alloc(sizeof(OpcUa_NodeId));
 								if(((*a_pResults)+n)->Value.Value.NodeId!=OpcUa_Null)
 								{
 									OpcUa_NodeId_Initialize(((*a_pResults)+n)->Value.Value.NodeId);
@@ -279,7 +279,7 @@ OpcUa_StatusCode my_Read(
 							}
 							if((a_pNodesToRead+n)->AttributeId==OpcUa_Attributes_DataType)
 							{
-								((*a_pResults)+n)->Value.Value.NodeId=OpcUa_Memory_Alloc(sizeof(OpcUa_NodeId));
+                                ((*a_pResults)+n)->Value.Value.NodeId= (OpcUa_NodeId*) OpcUa_Memory_Alloc(sizeof(OpcUa_NodeId));
 								if(((*a_pResults)+n)->Value.Value.NodeId!=OpcUa_Null)
 								{
 									OpcUa_NodeId_Initialize(((*a_pResults)+n)->Value.Value.NodeId);
@@ -360,7 +360,7 @@ OpcUa_StatusCode my_Read(
 							}
 							if((a_pNodesToRead+n)->AttributeId==OpcUa_Attributes_InverseName)
 							{
-								((*a_pResults)+n)->Value.Value.LocalizedText=OpcUa_Memory_Alloc(sizeof(OpcUa_LocalizedText));
+                                ((*a_pResults)+n)->Value.Value.LocalizedText= (OpcUa_LocalizedText*) OpcUa_Memory_Alloc(sizeof(OpcUa_LocalizedText));
 								if(((*a_pResults)+n)->Value.Value.NodeId!=OpcUa_Null)
 								{
 									OpcUa_LocalizedText_Initialize(((*a_pResults)+n)->Value.Value.LocalizedText);
@@ -496,7 +496,7 @@ OpcUa_StatusCode  fill_Variant_for_value_attribute(_VariableKnoten_*  p_Node, Op
 		{
 		case OpcUaId_Double:
 			{
-				p_Results->Value.Value.Array.Value.DoubleArray=OpcUa_Memory_Alloc((all_ValueAttribute_of_VariableTypeNodes_VariableNodes[p_Node->ValueIndex].Value.Array.Length)*sizeof(OpcUa_Double));
+                p_Results->Value.Value.Array.Value.DoubleArray=(OpcUa_Double*) OpcUa_Memory_Alloc((all_ValueAttribute_of_VariableTypeNodes_VariableNodes[p_Node->ValueIndex].Value.Array.Length)*sizeof(OpcUa_Double));
 				OpcUa_GotoErrorIfAllocFailed((p_Results->Value.Value.Array.Value.DoubleArray))
 				
 				OpcUa_MemCpy((p_Results->Value.Value.Array.Value.DoubleArray),(all_ValueAttribute_of_VariableTypeNodes_VariableNodes[p_Node->ValueIndex].Value.Array.Length)*sizeof(OpcUa_Double),(all_ValueAttribute_of_VariableTypeNodes_VariableNodes[p_Node->ValueIndex].Value.Array.Value.DoubleArray),(all_ValueAttribute_of_VariableTypeNodes_VariableNodes[p_Node->ValueIndex].Value.Array.Length)*sizeof(OpcUa_Double));
@@ -505,7 +505,7 @@ OpcUa_StatusCode  fill_Variant_for_value_attribute(_VariableKnoten_*  p_Node, Op
 			}
 		case OpcUaId_String:
 			{
-				p_Results->Value.Value.Array.Value.StringArray=OpcUa_Memory_Alloc((all_ValueAttribute_of_VariableTypeNodes_VariableNodes[p_Node->ValueIndex].Value.Array.Length)*sizeof(OpcUa_String));
+                p_Results->Value.Value.Array.Value.StringArray=(OpcUa_String*) OpcUa_Memory_Alloc((all_ValueAttribute_of_VariableTypeNodes_VariableNodes[p_Node->ValueIndex].Value.Array.Length)*sizeof(OpcUa_String));
 				OpcUa_GotoErrorIfAllocFailed((p_Results->Value.Value.Array.Value.DoubleArray))
 
 				for(i=0;i<(all_ValueAttribute_of_VariableTypeNodes_VariableNodes[p_Node->ValueIndex].Value.Array.Length);i++)
@@ -519,7 +519,7 @@ OpcUa_StatusCode  fill_Variant_for_value_attribute(_VariableKnoten_*  p_Node, Op
 			}
 		case OpcUaId_UInt32:
 			{
-				p_Results->Value.Value.Array.Value.UInt32Array=OpcUa_Memory_Alloc((all_ValueAttribute_of_VariableTypeNodes_VariableNodes[p_Node->ValueIndex].Value.Array.Length)*sizeof(OpcUa_UInt32));
+                p_Results->Value.Value.Array.Value.UInt32Array=(OpcUa_UInt32*) OpcUa_Memory_Alloc((all_ValueAttribute_of_VariableTypeNodes_VariableNodes[p_Node->ValueIndex].Value.Array.Length)*sizeof(OpcUa_UInt32));
 				OpcUa_GotoErrorIfAllocFailed((p_Results->Value.Value.Array.Value.UInt32Array))
 
 				OpcUa_MemCpy((p_Results->Value.Value.Array.Value.UInt32Array),(all_ValueAttribute_of_VariableTypeNodes_VariableNodes[p_Node->ValueIndex].Value.Array.Length)*sizeof(OpcUa_UInt32),(all_ValueAttribute_of_VariableTypeNodes_VariableNodes[p_Node->ValueIndex].Value.Array.Value.UInt32Array),(all_ValueAttribute_of_VariableTypeNodes_VariableNodes[p_Node->ValueIndex].Value.Array.Length)*sizeof(OpcUa_UInt32));
@@ -528,7 +528,7 @@ OpcUa_StatusCode  fill_Variant_for_value_attribute(_VariableKnoten_*  p_Node, Op
 			}
 		case OpcUaId_Boolean:
 			{
-				p_Results->Value.Value.Array.Value.BooleanArray=OpcUa_Memory_Alloc((all_ValueAttribute_of_VariableTypeNodes_VariableNodes[p_Node->ValueIndex].Value.Array.Length)*sizeof(OpcUa_Boolean));
+                p_Results->Value.Value.Array.Value.BooleanArray=(OpcUa_Boolean*) OpcUa_Memory_Alloc((all_ValueAttribute_of_VariableTypeNodes_VariableNodes[p_Node->ValueIndex].Value.Array.Length)*sizeof(OpcUa_Boolean));
 				OpcUa_GotoErrorIfAllocFailed((p_Results->Value.Value.Array.Value.BooleanArray))
 
 				OpcUa_MemCpy((p_Results->Value.Value.Array.Value.BooleanArray),(all_ValueAttribute_of_VariableTypeNodes_VariableNodes[p_Node->ValueIndex].Value.Array.Length)*sizeof(OpcUa_Boolean),(all_ValueAttribute_of_VariableTypeNodes_VariableNodes[p_Node->ValueIndex].Value.Array.Value.BooleanArray),(all_ValueAttribute_of_VariableTypeNodes_VariableNodes[p_Node->ValueIndex].Value.Array.Length)*sizeof(OpcUa_Boolean));

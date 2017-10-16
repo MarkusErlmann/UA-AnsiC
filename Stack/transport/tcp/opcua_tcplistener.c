@@ -576,7 +576,7 @@ OpcUa_InitializeStatus(OpcUa_Module_TcpListener, "SendErrorMessage");
     if(a_pTcpConnection->pSendQueue != OpcUa_Null || OpcUa_IsEqual(OpcUa_BadWouldBlock))
     {
         OpcUa_Buffer      Buffer;
-        OpcUa_BufferList* pBufferList = OpcUa_Alloc(sizeof(OpcUa_BufferList));
+        OpcUa_BufferList* pBufferList = (OpcUa_BufferList*) OpcUa_Alloc(sizeof(OpcUa_BufferList));
         OpcUa_GotoErrorIfAllocFailed(pBufferList);
         uStatus = pOutputStream->DetachBuffer((OpcUa_Stream*)pOutputStream, &Buffer);
         if(OpcUa_IsBad(uStatus))
@@ -585,7 +585,7 @@ OpcUa_InitializeStatus(OpcUa_Module_TcpListener, "SendErrorMessage");
             OpcUa_GotoError;
         }
         pBufferList->Buffer = Buffer;
-        pBufferList->Buffer.Data = OpcUa_Alloc(pBufferList->Buffer.Size);
+        pBufferList->Buffer.Data = (OpcUa_Byte*) OpcUa_Alloc(pBufferList->Buffer.Size);
         pBufferList->Buffer.FreeBuffer = OpcUa_True;
         pBufferList->pNext = OpcUa_Null;
         if(pBufferList->Buffer.Data == OpcUa_Null)
@@ -902,7 +902,7 @@ OpcUa_InitializeStatus(OpcUa_Module_TcpListener, "SendAcknowledgeMessage");
     if(OpcUa_IsEqual(OpcUa_BadWouldBlock))
     {
         OpcUa_Buffer      Buffer;
-        OpcUa_BufferList* pBufferList = OpcUa_Alloc(sizeof(OpcUa_BufferList));
+        OpcUa_BufferList* pBufferList = (OpcUa_BufferList*) OpcUa_Alloc(sizeof(OpcUa_BufferList));
         OpcUa_GotoErrorIfAllocFailed(pBufferList);
         uStatus = pOutputStream->DetachBuffer((OpcUa_Stream*)pOutputStream, &Buffer);
         if(OpcUa_IsBad(uStatus))
@@ -911,7 +911,7 @@ OpcUa_InitializeStatus(OpcUa_Module_TcpListener, "SendAcknowledgeMessage");
             OpcUa_GotoError;
         }
         pBufferList->Buffer = Buffer;
-        pBufferList->Buffer.Data = OpcUa_Alloc(pBufferList->Buffer.Size);
+        pBufferList->Buffer.Data = (OpcUa_Byte*) OpcUa_Alloc(pBufferList->Buffer.Size);
         pBufferList->Buffer.FreeBuffer = OpcUa_True;
         pBufferList->pNext = OpcUa_Null;
         if(pBufferList->Buffer.Data == OpcUa_Null)
@@ -1232,7 +1232,7 @@ OpcUa_InitializeStatus(OpcUa_Module_TcpListener, "ReadEventHandler");
     if(pTcpListenerConnection != OpcUa_Null)
     {
         /* A connection object exists for this socket. (Hello message was received and validated.) */
-        if(pTcpListenerConnection->bNoRcvUntilDone == OpcUa_True)
+        if(pTcpListenerConnection->bNoRcvUntilDone != OpcUa_False)
         {
             pTcpListenerConnection->bRcvDataPending = OpcUa_True;
             OpcUa_ReturnStatusCode;
@@ -1567,7 +1567,7 @@ OpcUa_InitializeStatus(OpcUa_Module_TcpListener, "WriteEventHandler");
                 {
                     pCurrentBuffer->Buffer.Position += iDataWritten;
                     if((pTcpListenerConnection->bNoRcvUntilDone == OpcUa_False) &&
-                       (pTcpListenerConnection->bRcvDataPending == OpcUa_True))
+                       (pTcpListenerConnection->bRcvDataPending != OpcUa_False))
                     {
                         pTcpListenerConnection->bRcvDataPending = OpcUa_False;
                         uStatus = OpcUa_TcpListener_ReadEventHandler(a_pListener, a_pSocket);
@@ -1582,7 +1582,7 @@ OpcUa_InitializeStatus(OpcUa_Module_TcpListener, "WriteEventHandler");
                 }
             } /* end while */
 
-            if(pTcpListenerConnection->bCloseWhenDone == OpcUa_True)
+            if(pTcpListenerConnection->bCloseWhenDone != OpcUa_False)
             {
                 break;
             }
@@ -1596,12 +1596,12 @@ OpcUa_InitializeStatus(OpcUa_Module_TcpListener, "WriteEventHandler");
                 uStatus);                               /* a status code for the event */
 
         } while(pTcpListenerConnection->pSendQueue != OpcUa_Null);
-        if(pTcpListenerConnection->bCloseWhenDone == OpcUa_True)
+        if(pTcpListenerConnection->bCloseWhenDone != OpcUa_False)
         {
             uStatus = OpcUa_TcpListener_TimeoutEventHandler(a_pListener, a_pSocket);
         }
         else if((pTcpListenerConnection->bNoRcvUntilDone == OpcUa_False) &&
-                (pTcpListenerConnection->bRcvDataPending == OpcUa_True))
+                (pTcpListenerConnection->bRcvDataPending != OpcUa_False))
         {
             pTcpListenerConnection->bRcvDataPending = OpcUa_False;
             uStatus = OpcUa_TcpListener_ReadEventHandler(a_pListener, a_pSocket);

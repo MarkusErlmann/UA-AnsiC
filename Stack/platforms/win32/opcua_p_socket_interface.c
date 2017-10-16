@@ -297,7 +297,7 @@ OpcUa_InitializeStatus(OpcUa_Module_Socket, "SocketManager_Create");
         uStatus = OpcUa_P_Semaphore_Create(&pInternalSocketManager->pStartupSemaphore, 0, 1);
         OpcUa_GotoErrorIfBad(uStatus);
 
-        pInternalSocketManager->pSocketManagers = OpcUa_P_Memory_Alloc(sizeof(OpcUa_InternalSocketManager*) * OPCUA_SOCKET_MAXMANAGERS);
+        pInternalSocketManager->pSocketManagers = (OpcUa_InternalSocketManager**) OpcUa_P_Memory_Alloc(sizeof(OpcUa_InternalSocketManager*) * OPCUA_SOCKET_MAXMANAGERS);
         OpcUa_GotoErrorIfAllocFailed(pInternalSocketManager->pSocketManagers);
         OpcUa_MemSet(pInternalSocketManager->pSocketManagers, 0, sizeof(OpcUa_InternalSocketManager*) * OPCUA_SOCKET_MAXMANAGERS);
     }

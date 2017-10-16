@@ -65,11 +65,7 @@ OpcUa_StatusCode my_BrowseNext(
 	extern OpcUa_UInt32		session_flag;
 	extern OpcUa_Double		msec_counter;
 	extern OpcUa_String*	p_user_name;
-	extern enum
-	{
-		free_to_use=0,
-		occupied=1
-	}continuation_point;
+    extern continuation_point Cont_Point_State;
 
     OpcUa_InitializeStatus(OpcUa_Module_Server, "OpcUa_ServerApi_BrowseNext");
 
@@ -120,12 +116,12 @@ OpcUa_StatusCode my_BrowseNext(
 
 	if(a_bReleaseContinuationPoints==OpcUa_False)
 	{
-		*a_pResults=OpcUa_Memory_Alloc(a_nNoOfContinuationPoints*sizeof(OpcUa_BrowseResult));
+        *a_pResults=(OpcUa_BrowseResult*) OpcUa_Memory_Alloc(a_nNoOfContinuationPoints*sizeof(OpcUa_BrowseResult));
 		OpcUa_GotoErrorIfAllocFailed((*a_pResults))
 
 		*a_pNoOfResults=a_nNoOfContinuationPoints;
 
-		continuation_point=free_to_use;
+        Cont_Point_State =free_to_use;
 
 		for(m=0;m<a_nNoOfContinuationPoints;m++)
 		{

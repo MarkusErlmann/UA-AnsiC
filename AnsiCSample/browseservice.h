@@ -34,7 +34,11 @@
 
 #define Is_my_node(startNodeId,meinNode) (startNodeId.NamespaceIndex==meinNode.BaseAttribute.NodeId.NamespaceIndex) && (startNodeId.Identifier.Numeric==meinNode.BaseAttribute.NodeId.Identifier.Numeric) && (startNodeId.IdentifierType==meinNode.BaseAttribute.NodeId.IdentifierType)
 
-
+typedef enum
+{
+    free_to_use = 0,
+    occupied = 1
+}continuation_point;
 
 typedef struct
 {
@@ -66,7 +70,6 @@ OpcUa_StatusCode my_Browse(
 
 
  // @brief BrowseNext Prototype.
-
 OpcUa_StatusCode my_BrowseNext(
 							OpcUa_Endpoint             a_hEndpoint,
 							OpcUa_Handle               a_hContext,
@@ -79,7 +82,6 @@ OpcUa_StatusCode my_BrowseNext(
 							OpcUa_BrowseResult**       a_pResults,
 							OpcUa_Int32*               a_pNoOfDiagnosticInfos,
 							OpcUa_DiagnosticInfo**     a_pDiagnosticInfos);
-
 
 OpcUa_StatusCode		browse						(OpcUa_BrowseDescription* ,OpcUa_BrowseResult*,OpcUa_Int );  //  besseren namen ausdenken!!!
 

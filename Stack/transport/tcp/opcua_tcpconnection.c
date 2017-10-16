@@ -275,7 +275,7 @@ OpcUa_InitializeStatus(OpcUa_Module_TcpConnection, "SendHelloMessage");
     if(OpcUa_IsEqual(OpcUa_BadWouldBlock))
     {
         OpcUa_Buffer      Buffer;
-        OpcUa_BufferList* pBufferList = OpcUa_Alloc(sizeof(OpcUa_BufferList));
+        OpcUa_BufferList* pBufferList = (OpcUa_BufferList*) OpcUa_Alloc(sizeof(OpcUa_BufferList));
         OpcUa_GotoErrorIfAllocFailed(pBufferList);
         uStatus = pOutputStream->DetachBuffer((OpcUa_Stream*)pOutputStream, &Buffer);
         if(OpcUa_IsBad(uStatus))
@@ -284,7 +284,7 @@ OpcUa_InitializeStatus(OpcUa_Module_TcpConnection, "SendHelloMessage");
             OpcUa_GotoError;
         }
         pBufferList->Buffer = Buffer;
-        pBufferList->Buffer.Data = OpcUa_Alloc(pBufferList->Buffer.Size);
+        pBufferList->Buffer.Data = (OpcUa_Byte*) OpcUa_Alloc(pBufferList->Buffer.Size);
         pBufferList->Buffer.FreeBuffer = OpcUa_True;
         pBufferList->pNext = OpcUa_Null;
         if(pBufferList->Buffer.Data == OpcUa_Null)
