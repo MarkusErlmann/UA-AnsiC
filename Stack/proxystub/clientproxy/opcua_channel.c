@@ -1083,8 +1083,9 @@ OpcUa_StatusCode OpcUa_Channel_Connect( OpcUa_Channel                           
                                         OpcUa_UInt32                                a_nNetworkTimeout)
 {
     OpcUa_AsyncCallState*   pAsyncState = OpcUa_Null;
+#if OPCUA_MULTITHREADED
     OpcUa_InternalChannel*  pInternalChannel = (OpcUa_InternalChannel*)(a_hChannel);
-
+#endif /*  OPCUA_MULTITHREADED */
 OpcUa_InitializeStatus(OpcUa_Module_Channel, "Connect");
 
     OpcUa_ReturnErrorIfArgumentNull(a_hChannel);
